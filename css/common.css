@@ -20,6 +20,8 @@ html{
 #header{
     background-color: var(--blue-gray);
     padding: 1.25rem 0;
+    top: 0;
+    position: sticky;
 }
 
 #header .header-wrapper .logo{
