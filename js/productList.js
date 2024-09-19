@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded" , ()=> {
+document.addEventListener("DOMContentLoaded" , async ()=> {
 
     async function fetchProducts() {
         const resposne = await axios.get("https://fakestoreapi.com/products");
@@ -6,10 +6,25 @@ document.addEventListener("DOMContentLoaded" , ()=> {
         return resposne.data;
     }
 
+    async function fetchProductsByCategory(category) {
+        const resposne = await axios.get(`https://fakestoreapi.com/products/category/${category}`);
+        console.log(resposne.data);
+        return resposne.data;
+    }
+
+    const downloadedProducts = await fetchProducts();
+
     async function populateProducts(flag, customProducts) {
         let products = customProducts;
+        const queryParms = new URLSearchParams(window.location.search);
+        const queryParmsObject = Object.fromEntries(queryParms.entries());
+
         if(flag == false){
-            products = await fetchProducts();
+            if(queryParmsObject['category']){
+                products = await fetchProductsByCategory(queryParmsObject['category']);
+            } else {
+                products = await fetchProducts();
+            }
         }
         
         const productList = document.getElementById("productList");
@@ -50,7 +65,7 @@ document.addEventListener("DOMContentLoaded" , ()=> {
         const productList = document.getElementById("productList");
         const minPrice = Number(document.getElementById("minPrice").value);
         const maxPrice = Number(document.getElementById("maxPrice").value);
-        const products = await fetchProducts();
+        const products = downloadedProducts;
         filteredProducts = products.filter(product =>  product.price >= minPrice && product.price <= maxPrice);
         productList.innerHTML = "";
         populateProducts(true, filteredProducts);
