@@ -4,24 +4,24 @@ document.addEventListener("DOMContentLoaded" , async ()=> {
         const resposne = await axios.get("https://fakestoreapi.com/products");
         console.log(resposne.data);
         return resposne.data;
-    }
+    } 
 
     async function fetchProductsByCategory(category) {
-        const resposne = await axios.get(`https://fakestoreapi.com/products/category/${category}`);
-        console.log(resposne.data);
-        return resposne.data;
+        const response = await axios.get(`https://fakestoreapi.com/products/category/${category}`);
+        console.log(response.data);
+        return response.data;
     }
 
     const downloadedProducts = await fetchProducts();
 
     async function populateProducts(flag, customProducts) {
         let products = customProducts;
-        const queryParms = new URLSearchParams(window.location.search);
-        const queryParmsObject = Object.fromEntries(queryParms.entries());
-
-        if(flag == false){
-            if(queryParmsObject['category']){
-                products = await fetchProductsByCategory(queryParmsObject['category']);
+        const queryParams = new URLSearchParams(window.location.search);
+        const queryParamsObject = Object.fromEntries(queryParams.entries());
+        
+        if(flag == false) {
+            if(queryParamsObject['category']) {
+                products = await fetchProductsByCategory(queryParamsObject['category']);
             } else {
                 products = await fetchProducts();
             }
