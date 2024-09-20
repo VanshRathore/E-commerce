@@ -6,6 +6,12 @@ document.addEventListener("DOMContentLoaded" , async ()=> {
         return resposne.data;
     } 
 
+    async function fetchCategories() {
+        const resposne = await fetch("https://fakestoreapi.com/products/categories");
+        const data = await resposne.json();
+        return data;
+    }
+
     async function fetchProductsByCategory(category) {
         const response = await axios.get(`https://fakestoreapi.com/products/category/${category}`);
         console.log(response.data);
@@ -18,7 +24,7 @@ document.addEventListener("DOMContentLoaded" , async ()=> {
         let products = customProducts;
         const queryParams = new URLSearchParams(window.location.search);
         const queryParamsObject = Object.fromEntries(queryParams.entries());
-        
+
         if(flag == false) {
             if(queryParamsObject['category']) {
                 products = await fetchProductsByCategory(queryParamsObject['category']);
@@ -58,7 +64,22 @@ document.addEventListener("DOMContentLoaded" , async ()=> {
         });
     }
 
+    async function populateCategories() {
+        const categories = await fetchCategories();
+        const categoryList = document.getElementById("categoryList");
+        categories.forEach(category => {
+
+            const categoryLink = document.createElement("a");
+            categoryLink.classList.add("d-flex" ,"text-decoration-none");
+            categoryLink.textContent = category;
+            categoryLink.href = `productList.html?category=${category}`;
+    
+            categoryList.appendChild(categoryLink); 
+        });
+    };
+
     populateProducts(false);
+    populateCategories()
 
     const filterSearch = document.getElementById("search");
     filterSearch.addEventListener("click", async () => {
